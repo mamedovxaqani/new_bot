@@ -1,27 +1,19 @@
+require("dotenv").config();
+
 const TelegramBot = require("node-telegram-bot-api");
 
 // replace the value below with the Telegram token you receive from @BotFather
-const token = "1880243461:AAGfBWMwzGO921kdg91Xu5IyMfITbAdjJ3o";
+const token = process.env.TOKEN;
 
 // Create a bot that uses 'polling' to fetch new updates
 const bot = new TelegramBot(token, { polling: true });
 
-// Matches "/echo [whatever]"
-bot.onText(/\/echo (.+)/, (msg, match) => {
-  // 'msg' is the received Message from Telegram
-  // 'match' is the result of executing the regexp above on the text content
-  // of the message
-
-  const chatId = msg.chat.id;
-  const resp = match[1]; // the captured "whatever"
-
-  // send back the matched "whatever" to the chat
-  bot.sendMessage(chatId, resp);
-});
-
 // Listen for any kind of message. There are different kinds of
 // messages.
 bot.on("message", (msg) => {
+  function rand(min, max) {
+    return Math.round(Math.random() * (max - min) + min);
+  }
   const chatId = msg.chat.id;
   const first_name = msg.from.first_name;
 
@@ -30,5 +22,15 @@ bot.on("message", (msg) => {
     animalsArray[Math.floor(Math.random() * animalsArray.length)];
 
   // send a message to the chat acknowledging receipt of their message
-  bot.sendMessage(chatId, ` ${first_name}: ${randomAnimal}`);
+
+  if (first_name == "Eguene") {
+    bot.sendMessage(chatId, ` ${first_name}: ${randomAnimal}`);
+  } else {
+    const randomNumber = rand(1, 100);
+    if (randomNumber >= 1 && randomNumber <= 30) {
+      bot.sendMessage(chatId, ` ${first_name}: ${randomAnimal}`);
+    } else {
+      return "";
+    }
+  }
 });
